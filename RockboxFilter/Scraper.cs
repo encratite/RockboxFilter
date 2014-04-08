@@ -82,9 +82,18 @@ namespace RockboxFilter
 				if (genreNode == null)
 					throw new ApplicationException("Unable to find genre node");
 				string genre = genreNode.InnerText;
+				var sizeNode = node.SelectSingleNode(".//td[@class = 'lista' and (contains(text(), ' MB') or contains(text(), ' GB'))]");
+				if (sizeNode == null)
+					throw new ApplicationException("Unable to find size node");
+				double size = Ashod.FileSize.FromString(sizeNode.InnerText);
 				if (IsBannedGenre(genre))
 				{
 					Logger.Warning("Banned genre \"{1}\" in release \"{0}\"", name, genre);
+					continue;
+				}
+				if (size > _Configuration.SizeLimit)
+				{
+					Logger.Warning("Release \"{0}\" exceeds the filesize limit", name);
 					continue;
 				}
 				if (File.Exists(torrentPath))
