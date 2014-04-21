@@ -133,7 +133,7 @@ namespace RockboxFilter
 			return false;
 		}
 
-		string Download(string uri)
+		private string Download(string uri)
 		{
 			var client = new WebClient();
 			string output = client.DownloadString(new Uri(uri));
